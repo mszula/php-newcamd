@@ -1,0 +1,19 @@
+{
+  "name": "mszula/php-newcamd",
+  "description": "Newcamd cardserver client",
+  "license": "MIT",
+  "keywords": ["Newcamd"],
+  "authors": [
+    {
+      "name": "Mateusz Szuła",
+      "email": "mateusz.sz@poczta.fm"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^4.0",
+    "squizlabs/php_codesniffer": "2.*"
+  },
+  "autoload": {
+    "psr-4": {"Newcamd\\": "src/Newcamd"}
+  }
+}
