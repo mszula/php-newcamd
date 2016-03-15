@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-08
- * Time: 13:29
- */
 
 namespace Newcamd;
-
 
 class Byte
 {
@@ -18,7 +11,7 @@ class Byte
      * Byte constructor.
      * @param $length
      */
-    public function __construct($length=0)
+    public function __construct($length = 0)
     {
         $this->setLength($length);
     }
@@ -30,7 +23,7 @@ class Byte
         return $this;
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->get();
     }

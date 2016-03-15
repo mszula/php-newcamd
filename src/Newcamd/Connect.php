@@ -1,14 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-09
- * Time: 00:34
- */
 
 namespace Newcamd;
-
-
 
 use Newcamd\Socket\Socket;
 
@@ -80,5 +72,4 @@ class Connect
 
         return $this;
     }
-
 }

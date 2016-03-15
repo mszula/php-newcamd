@@ -39,6 +39,4 @@ class Initial extends ServerMessage implements ServerMessageInterface
     {
         $this->bytes14 = ByteFactory::create($message);
     }
-
-
 }

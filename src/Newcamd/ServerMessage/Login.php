@@ -70,7 +70,4 @@ class Login extends ServerMessage implements ServerMessageInterface
 
         return $this;
     }
-
-
-
 }

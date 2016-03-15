@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-09
- * Time: 12:59
- */
 
 namespace Newcamd\Crypt;
-
 
 use Newcamd\Byte;
 
@@ -48,5 +41,4 @@ class Key
 
         return $this;
     }
-
 }

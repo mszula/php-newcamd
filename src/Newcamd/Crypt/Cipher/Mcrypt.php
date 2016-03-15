@@ -1,17 +1,12 @@
 <?php
 
 namespace Newcamd\Crypt\Cipher;
+
 use Newcamd\Byte;
 use Newcamd\Crypt\CipherInterface;
 use Newcamd\Crypt\Key;
 use Newcamd\ServerMessage;
 
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-14
- * Time: 23:49
- */
 class Mcrypt implements CipherInterface
 {
     protected $key = null;
@@ -19,7 +14,13 @@ class Mcrypt implements CipherInterface
 
     public function encrypt(Byte $message)
     {
-        return mcrypt_encrypt(MCRYPT_3DES, $this->getKey()->get(), $message->get(), MCRYPT_MODE_CBC, $this->getIv()->get());
+        return mcrypt_encrypt(
+            MCRYPT_3DES,
+            $this->getKey()->get(),
+            $message->get(),
+            MCRYPT_MODE_CBC,
+            $this->getIv()->get()
+        );
     }
 
     public function decrypt(Byte $message)

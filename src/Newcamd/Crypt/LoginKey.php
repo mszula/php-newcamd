@@ -1,20 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-10
- * Time: 21:45
- */
 
 namespace Newcamd\Crypt;
-
 
 use Newcamd\Byte;
 
 class LoginKey extends Key
 {
 
-    public function setDesKey(Byte $key) {
+    public function setDesKey(Byte $key)
+    {
         $this->xorKey($key);
         $this->spread();
 
@@ -28,15 +22,22 @@ class LoginKey extends Key
         for ($i=0; $i<16; $i++) {
             if ($i == 0) {
                 $spread->setOneAscii($this->byte->getOne($i)->ord() & 0xfe, $i);
-            } else if ($i >= 1 && $i <= 6) {
-                $spread->setOneAscii((($this->byte->getOne($i-1)->ord() << (8-$i)) | ($this->byte->getOne($i)->ord() >> $i)) & 0xfe, $i);
-            } else if ($i == 7) {
+            } elseif ($i >= 1 && $i <= 6) {
+                $spread->setOneAscii(
+                    (($this->byte->getOne($i-1)->ord() << (8-$i)) | ($this->byte->getOne($i)->ord() >> $i)) & 0xfe,
+                    $i
+                );
+            } elseif ($i == 7) {
                 $spread->setOneAscii($this->byte->getOne($i-1)->ord() << 1, $i);
-            } else if ($i == 8) {
+            } elseif ($i == 8) {
                 $spread->setOneAscii($this->byte->getOne($i-1)->ord() & 0xfe, $i);
-            } else if ($i >= 9 && $i <= 14) {
-                $spread->setOneAscii((($this->byte->getOne($i-2)->ord() << (16-$i)) | ($this->byte->getOne($i-1)->ord() >> ($i-8))) & 0xfe, $i);
-            } else if ($i == 15) {
+            } elseif ($i >= 9 && $i <= 14) {
+                $spread->setOneAscii(
+                    (($this->byte->getOne($i-2)->ord() << (16-$i))
+                        | ($this->byte->getOne($i-1)->ord() >> ($i-8))) & 0xfe,
+                    $i
+                );
+            } elseif ($i == 15) {
                 $spread->setOneAscii($this->byte->getOne($i-2)->ord() << 1, $i);
             }
         }
@@ -63,6 +64,4 @@ class LoginKey extends Key
         return $this;
 
     }
-
-
 }

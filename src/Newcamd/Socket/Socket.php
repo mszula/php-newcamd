@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-10
- * Time: 13:01
- */
 
 namespace Newcamd\Socket;
-
 
 use Newcamd\Socket\Exception\SocketException;
 
@@ -31,7 +24,7 @@ class Socket
         return $this;
     }
 
-    public function receive($len=4092)
+    public function receive($len = 4092)
     {
         if (@socket_recv($this->socket, $data, $len, 0) === false) {
             $this->error();

@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-10
- * Time: 22:24
- */
 
 namespace Newcamd\Crypt;
-
 
 use Newcamd\Byte;
 use Newcamd\ByteFactory;
@@ -29,7 +22,7 @@ class Cipher
      */
     public function __construct()
     {
-        if(function_exists("mcrypt_encrypt")) {
+        if (function_exists("mcrypt_encrypt")) {
             $this->cipher = new Mcrypt();
         }
     }
@@ -120,7 +113,13 @@ class Cipher
             echo bin2hex($pieces[$id]).PHP_EOL;
 
             $pieces[$id] = $this->cipher->encrypt(ByteFactory::create($pieces[$id]));
-//            $pieces[$id] = mcrypt_encrypt(MCRYPT_3DES, $this->getKey()->get().substr($this->getKey()->get(), 0, 8), $pieces[$id], MCRYPT_MODE_CBC, $ivec);
+//            $pieces[$id] = mcrypt_encrypt(
+//                MCRYPT_3DES,
+//                $this->getKey()->get().substr($this->getKey()->get(), 0, 8),
+//                $pieces[$id],
+//                MCRYPT_MODE_CBC,
+//                $ivec
+//            );
             echo bin2hex($pieces[$id]).PHP_EOL;
 //            $ivec = $pieces[$id];
             $this->cipher->setIv(ByteFactory::create($pieces[$id]));
