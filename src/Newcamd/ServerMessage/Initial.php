@@ -15,10 +15,6 @@ use Newcamd\ServerMessageInterface;
  */
 class Initial extends ServerMessage implements ServerMessageInterface
 {
-    /**
-     * @var Byte
-     */
-    protected $bytes14;
 
     public function isValid()
     {
@@ -27,16 +23,7 @@ class Initial extends ServerMessage implements ServerMessageInterface
 
     public function get14ByteKey()
     {
-        return $this->getMessage();
+        return $this->get();
     }
 
-    public function getMessage()
-    {
-        return $this->bytes14;
-    }
-
-    public function setMessage($message)
-    {
-        $this->bytes14 = ByteFactory::create($message);
-    }
 }

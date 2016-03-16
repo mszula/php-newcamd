@@ -20,16 +20,6 @@ class Login extends ServerMessage implements ServerMessageInterface
     protected $login = null;
     protected $crypt_password = null;
 
-    public function getMessage()
-    {
-        return ByteFactory::create(self::MESSAGE_ID."\0\0".$this->getLogin()."\0".$this->getPassword()."\0");
-    }
-
-    public function setMessage($message)
-    {
-        $bytes = ByteFactory::create($message);
-    }
-
     public function isValid()
     {
         return $this->getLogin() && $this->getPassword();
@@ -49,6 +39,7 @@ class Login extends ServerMessage implements ServerMessageInterface
     public function setLogin($login)
     {
         $this->login = $login;
+        $this->setBytes();
 
         return $this;
     }
@@ -67,7 +58,13 @@ class Login extends ServerMessage implements ServerMessageInterface
     public function setPassword($password)
     {
         $this->crypt_password = crypt($password, '$1$abcdefgh$');
+        $this->setBytes();
 
         return $this;
+    }
+
+    private function setBytes()
+    {
+        $this->set(self::MESSAGE_ID."\0\0".$this->getLogin()."\0".$this->getPassword()."\0");
     }
 }
