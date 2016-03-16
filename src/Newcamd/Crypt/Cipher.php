@@ -3,30 +3,32 @@
 namespace Newcamd\Crypt;
 
 use Newcamd\Byte;
-use Newcamd\ByteFactory;
 use Newcamd\Crypt\Cipher\Mcrypt;
+use Newcamd\Crypt\Cipher\OpenSSL;
+use Newcamd\Crypt\Exception\CipherException;
 use Newcamd\ServerMessage;
 
 class Cipher
 {
-
+    const DES_BLOCK_SIZE = 8;
     /**
      * @var Key
      */
     protected $key;
     protected $cipher;
+    protected $message;
 
-    /**
-     * Cipher constructor.
-     * @param Key $key
-     */
+
     public function __construct()
     {
-        if (function_exists("mcrypt_encrypt")) {
+        if (function_exists("openssl_encrypt")) {
+            $this->cipher = new OpenSSL();
+        } elseif (function_exists("mcrypt_encrypt")) {
             $this->cipher = new Mcrypt();
+        } else {
+            throw new CipherException('Can\'t find any cipher module (OpenSSL or Mcrypt)', 0);
         }
     }
-
 
     public function getKey()
     {
@@ -40,27 +42,30 @@ class Cipher
         return $this;
     }
 
-    private function addChecksum(Byte $message)
+    private function addChecksum()
     {
         $checksum = "\0";
 
-        for ($i = 2; $i < $message->getLength(); $i++) {
-            $checksum ^= $message->getOne($i)->get();
+        for ($i = 2; $i < $this->getMessage()->getLength(); $i++) {
+            $checksum ^= $this->getMessage()->getOne($i)->get();
         }
+        $this->getMessage()->append($checksum);
 
-        return $message->append($checksum);
+        return $this;
     }
 
-    private function addPad(Byte $message)
+    private function addPad()
     {
-        $noPadBytes = (8 - (($message->getLength() - 1) % 8)) % 8;
+        $noPadBytes = (self::DES_BLOCK_SIZE - (($this->getMessage()->getLength() - 1) % self::DES_BLOCK_SIZE))
+            % self::DES_BLOCK_SIZE;
+        $this->getMessage()->append($this->getRandom($noPadBytes));
 
-        return $message->append($this->getRandom($noPadBytes));
+        return $this;
     }
 
-    private function prepare(Byte $message)
+    private function prepare()
     {
-        $len = $message->getLength();
+        $len = $this->getMessage()->getLength();
 //        if ($len < 3 || $len + 12 > CWS_NETMSGSIZE) return -1;
 
         //NetBuf Header
@@ -78,62 +83,76 @@ class Cipher
 //		netbuf[10] = cd->provid & 0xff;
         }
         //set up data buffer length unsigned chars
-        $message->setOneAscii(($message->getOne(1)->ord() & 0xf0) | ((($len - 3) >> 8) & 0x0f), 1)
+        $this->getMessage()->setOneAscii(($this->getMessage()->getOne(1)->ord() & 0xf0) | ((($len - 3) >> 8) & 0x0f), 1)
             ->setOneAscii(($len - 3) & 0xff, 2)
             ->prepend($netbuf);
 
-        return $message;
+        return $this;
     }
 
-    public function encrypt(ServerMessage $message)
+    public function encrypt()
     {
-
-//        if (!$this->getKey()) {
-//            throw new DESException('Lack of encrypt key. Use setKey() first.');
-//        }
-
-        $data = $message->getMessage();
-        $data = $this->prepare($data);
-        $data = $this->addPad($data);
-        $data = $this->addChecksum($data);
-        $data = $data->get();
-
-        $ivec = $this->getRandom(8);
-        $this->cipher->setIv($ivec);
-
-
-        $first_ivec = $ivec;
-        $header = substr($data, 0, 2);
-
-        $pieces = str_split(substr($data, 2), 8);
-
-
-
-        foreach ($pieces as $id => $p) {
-            echo bin2hex($pieces[$id]).PHP_EOL;
-
-            $pieces[$id] = $this->cipher->encrypt(ByteFactory::create($pieces[$id]));
-//            $pieces[$id] = mcrypt_encrypt(
-//                MCRYPT_3DES,
-//                $this->getKey()->get().substr($this->getKey()->get(), 0, 8),
-//                $pieces[$id],
-//                MCRYPT_MODE_CBC,
-//                $ivec
-//            );
-            echo bin2hex($pieces[$id]).PHP_EOL;
-//            $ivec = $pieces[$id];
-            $this->cipher->setIv(ByteFactory::create($pieces[$id]));
+        if (!$this->getMessage()) {
+            throw new CipherException('Lack of message. Use setMessage() first.', 1);
+        }
+        if (!$this->getKey()) {
+            throw new CipherException('Lack of encrypt key. Use setKey() first.', 2);
         }
 
-        return $header.implode('', $pieces).$first_ivec;
+        $this->prepare()
+            ->addPad()
+            ->addChecksum();
+
+        $ivec = $this->getRandom(self::DES_BLOCK_SIZE);
+        $this->cipher->setIv($ivec);
+
+        $crypt = new ServerMessage\Crypt();
+        $crypt->set($this->getMessage()->getRange(0, 2));
+
+        for ($i = 2; $i<$this->getMessage()->getLength(); $i += self::DES_BLOCK_SIZE) {
+            $range = $this->getMessage()->getRange($i, self::DES_BLOCK_SIZE);
+
+            $des = $this->cipher->encrypt($range);
+            $crypt->append($des);
+            $this->cipher->setIv($des);
+        }
+
+        $crypt->append($ivec);
+
+        return $crypt;
+    }
+
+    public function decrypt()
+    {
 
     }
 
     public function getRandom($length)
     {
+        $length = (int)$length;
+
         $buffer = new Byte($length);
-        $buffer->set(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+        $buffer->set($this->cipher->getRandom($length));
 
         return $buffer;
+    }
+
+    /**
+     * @return ServerMessage
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param ServerMessage $message
+     * @return $this
+     */
+    public function setMessage(ServerMessage $message)
+    {
+        $this->message = $message;
+
+        return $this;
     }
 }

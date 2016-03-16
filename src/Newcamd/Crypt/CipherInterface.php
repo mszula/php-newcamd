@@ -12,4 +12,5 @@ interface CipherInterface
     public function getKey();
     public function setIv(Byte $iv);
     public function getIv();
+    public function getRandom($length);
 }

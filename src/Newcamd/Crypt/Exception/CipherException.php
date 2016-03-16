@@ -2,7 +2,7 @@
 
 namespace Newcamd\Crypt\Exception;
 
-class DESException extends \Exception
+class CipherException extends \Exception
 {
 
 }
