@@ -27,12 +27,15 @@ class Connect
         return $this;
     }
 
+    /**
+     * @return ServerMessage
+     */
     public function receive()
     {
         return ServerMessageFactory::create($this->getSocket()->receive());
     }
 
-    public function send($message)
+    public function send(ServerMessage\Crypt $message)
     {
         return $this->getSocket()->send($message);
     }
