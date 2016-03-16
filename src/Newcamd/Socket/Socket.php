@@ -2,6 +2,7 @@
 
 namespace Newcamd\Socket;
 
+use Newcamd\ServerMessage;
 use Newcamd\Socket\Exception\SocketException;
 
 class Socket
@@ -33,8 +34,14 @@ class Socket
         return $data;
     }
 
-    public function send($message)
+    public function send(ServerMessage\Crypt $message)
     {
+//        $message->prepend("\0\0");
+        $message->setOneAscii(($message->getLength() - 2) >> 8, 0);
+        $message->setOneAscii(($message->getLength() - 2) & 0xff, 1);
+
+        echo PHP_EOL.$message->hex();
+
         if (!@socket_send($this->socket, $message, strlen($message), 0)) {
             $this->error();
         }
@@ -45,6 +52,6 @@ class Socket
     protected function error()
     {
         $error_no = socket_last_error();
-        throw new SocketException(socket_strerror($error_no), socket_last_error($error_no));
+        throw new SocketException(socket_strerror($error_no), $error_no);
     }
 }
