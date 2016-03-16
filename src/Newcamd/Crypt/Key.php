@@ -20,8 +20,14 @@ class Key
         $this->byte = $byte;
     }
 
+    public function __toString()
+    {
+        return $this->get();
+    }
+
+
     /**
-     * @return Byte
+     * @return string
      */
     public function get()
     {
