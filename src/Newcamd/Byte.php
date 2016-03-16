@@ -4,7 +4,7 @@ namespace Newcamd;
 
 class Byte
 {
-    private $bytes = '';
+    private $bytes = "\0";
     private $length = 0;
 
     /**
@@ -37,6 +37,11 @@ class Byte
     {
         $self = new self(1);
         return $self->set($this->bytes[$position]);
+    }
+
+    public function getRange($start, $length) {
+        $self = new self($length);
+        return $self->set(substr($this->bytes, $start, $length));
     }
 
     public function setOne($byte, $position)
@@ -112,7 +117,9 @@ class Byte
     public function setLength($length)
     {
         $this->length = $length;
-        $this->prepareBytes();
+        if ($this->length > 0) {
+            $this->prepareBytes();
+        }
 
         return $this;
     }
@@ -124,7 +131,7 @@ class Byte
 
     public function dec()
     {
-        return bindec($this->get());
+        return hexdec($this->hex());
     }
 
     public function ord()
