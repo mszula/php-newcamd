@@ -36,12 +36,6 @@ class Socket
 
     public function send(ServerMessage\Crypt $message)
     {
-//        $message->prepend("\0\0");
-        $message->setOneAscii(($message->getLength() - 2) >> 8, 0);
-        $message->setOneAscii(($message->getLength() - 2) & 0xff, 1);
-
-        echo PHP_EOL.$message->hex();
-
         if (!@socket_send($this->socket, $message, strlen($message), 0)) {
             $this->error();
         }

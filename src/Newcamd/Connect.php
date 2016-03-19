@@ -37,6 +37,12 @@ class Connect
 
     public function send(ServerMessage\Crypt $message)
     {
+        $message->prepend("\0\0");
+        $message->setOneAscii(($message->getLength() - 2) >> 8, 0);
+        $message->setOneAscii(($message->getLength() - 2) & 0xff, 1);
+
+        echo $message->hex();
+
         return $this->getSocket()->send($message);
     }
 

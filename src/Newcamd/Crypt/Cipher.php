@@ -46,7 +46,7 @@ class Cipher
     {
         $checksum = "\0";
 
-        for ($i = 2; $i < $this->getMessage()->getLength(); $i++) {
+        for ($i = 0; $i < $this->getMessage()->getLength(); $i++) {
             $checksum ^= $this->getMessage()->getOne($i)->get();
         }
         $this->getMessage()->append($checksum);
@@ -56,7 +56,7 @@ class Cipher
 
     private function addPad()
     {
-        $noPadBytes = (self::DES_BLOCK_SIZE - (($this->getMessage()->getLength() - 1) % self::DES_BLOCK_SIZE))
+        $noPadBytes = (self::DES_BLOCK_SIZE - (($this->getMessage()->getLength() + 1) % self::DES_BLOCK_SIZE))
             % self::DES_BLOCK_SIZE;
         $this->getMessage()->append($this->getRandom($noPadBytes));
 
@@ -69,7 +69,7 @@ class Cipher
 //        if ($len < 3 || $len + 12 > CWS_NETMSGSIZE) return -1;
 
         //NetBuf Header
-        $netbuf = new Byte(12);
+        $netbuf = new Byte(10);
         $cd = null;
         if ($cd) {
 //        $netbuf->setOne(($cd->msgid >> 8) & 0xff, 2);
@@ -107,9 +107,9 @@ class Cipher
         $this->cipher->setIv($ivec);
 
         $crypt = new ServerMessage\Crypt();
-        $crypt->set($this->getMessage()->getRange(0, 2));
+        $crypt->set('');
 
-        for ($i = 2; $i<$this->getMessage()->getLength(); $i += self::DES_BLOCK_SIZE) {
+        for ($i = 0; $i<$this->getMessage()->getLength(); $i += self::DES_BLOCK_SIZE) {
             $range = $this->getMessage()->getRange($i, self::DES_BLOCK_SIZE);
 
             $des = $this->cipher->encrypt($range);
