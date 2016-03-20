@@ -25,7 +25,15 @@ class OpenSSL extends Generic implements CipherInterface
 
     public function decrypt(Byte $message)
     {
-        // TODO: Implement decrypt() method.
+        return ByteFactory::create(
+            openssl_decrypt(
+                $message,
+                'des-ede3-cbc',
+                $this->getKey(),
+                OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,
+                $this->getIv()
+            )
+        );
     }
 
     public function getRandom($length)
