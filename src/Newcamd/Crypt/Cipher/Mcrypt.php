@@ -24,10 +24,10 @@ class Mcrypt extends Generic implements CipherInterface
     {
         return ByteFactory::create(mcrypt_decrypt(
             MCRYPT_3DES,
-            $this->getKey()->get(),
+            $this->getKey(),
             $message->get(),
             MCRYPT_MODE_CBC,
-            $this->getIv()->get()
+            $this->getIv()
         ));
     }
 
