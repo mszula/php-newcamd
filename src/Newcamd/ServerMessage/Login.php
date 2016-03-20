@@ -57,7 +57,7 @@ class Login extends ServerMessage implements ServerMessageInterface
      */
     public function setPassword($password)
     {
-        $this->crypt_password = crypt($password, '$1$abcdefgh$');
+        $this->crypt_password = crypt($password, self::PASSWORD_SALT);
         $this->setBytes();
 
         return $this;
