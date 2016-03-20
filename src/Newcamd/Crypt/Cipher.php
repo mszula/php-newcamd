@@ -2,11 +2,13 @@
 
 namespace Newcamd\Crypt;
 
+use DoctrineTest\InstantiatorTestAsset\ExceptionAsset;
 use Newcamd\Byte;
 use Newcamd\Crypt\Cipher\Mcrypt;
 use Newcamd\Crypt\Cipher\OpenSSL;
 use Newcamd\Crypt\Exception\CipherException;
 use Newcamd\ServerMessage;
+use Newcamd\ServerMessageFactory;
 
 class Cipher
 {
@@ -52,6 +54,15 @@ class Cipher
         $this->getMessage()->append($checksum);
 
         return $this;
+    }
+
+    private function checkChecksum(Byte $message){
+        $checksum = "\0";
+        for ($i = 0; $i<$message->getLength(); $i++) {
+            $checksum ^= $message->getOne($i)->get();
+        }
+
+        return $checksum == "\0";
     }
 
     private function addPad()
@@ -124,7 +135,28 @@ class Cipher
 
     public function decrypt()
     {
+        if (!$this->getMessage() instanceof ServerMessage\Crypt) {
+            throw new CipherException(
+                'Can\'t decrypt '.get_class($this->getMessage()).'. Only ServerMessage\Crypt is allowed.',
+                3
+            );
+        }
 
+        $this->cipher->setIv($this->getMessage()->getRange($this->getMessage()->getLength()-8, 8));
+        $decrypted = new Byte();
+
+        for ($i = 0; $i<$this->getMessage()->getLength()-8; $i += self::DES_BLOCK_SIZE) {
+            $range = $this->getMessage()->getRange($i, self::DES_BLOCK_SIZE);
+
+            $decrypted->append($this->cipher->decrypt($range));
+            $this->cipher->setIv($range);
+        }
+
+        if (!$this->checkChecksum($decrypted)) {
+            throw new CipherException('Checksum failed. Possible incorrect 3DES key', 4);
+        }
+
+        return ServerMessageFactory::create($decrypted);
     }
 
     public function getRandom($length)
