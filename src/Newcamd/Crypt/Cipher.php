@@ -2,7 +2,6 @@
 
 namespace Newcamd\Crypt;
 
-use DoctrineTest\InstantiatorTestAsset\ExceptionAsset;
 use Newcamd\Byte;
 use Newcamd\Crypt\Cipher\Mcrypt;
 use Newcamd\Crypt\Cipher\OpenSSL;
@@ -81,6 +80,8 @@ class Cipher
 
         //NetBuf Header
         $netbuf = new Byte(10);
+
+        // Todo: Obsługa sid caid...
         $cd = null;
         if ($cd) {
 //        $netbuf->setOne(($cd->msgid >> 8) & 0xff, 2);
@@ -144,6 +145,7 @@ class Cipher
 
         $this->cipher->setIv($this->getMessage()->getRange($this->getMessage()->getLength()-8, 8));
         $decrypted = new Byte();
+        $decrypted->set('');
 
         for ($i = 0; $i<$this->getMessage()->getLength()-8; $i += self::DES_BLOCK_SIZE) {
             $range = $this->getMessage()->getRange($i, self::DES_BLOCK_SIZE);
@@ -155,6 +157,9 @@ class Cipher
         if (!$this->checkChecksum($decrypted)) {
             throw new CipherException('Checksum failed. Possible incorrect 3DES key', 4);
         }
+
+        // Todo: Obsługa sid caid, aktualnie wycinane
+        $decrypted = $decrypted->getRange(10);
 
         return ServerMessageFactory::create($decrypted);
     }
