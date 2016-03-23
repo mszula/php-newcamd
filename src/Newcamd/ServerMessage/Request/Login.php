@@ -1,17 +1,10 @@
 <?php
 
-namespace Newcamd\ServerMessage;
+namespace Newcamd\ServerMessage\Request;
 
-use Newcamd\ByteFactory;
 use Newcamd\ServerMessage;
 use Newcamd\ServerMessageInterface;
 
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-09
- * Time: 00:35
- */
 class Login extends ServerMessage implements ServerMessageInterface
 {
     const MESSAGE_ID = "\xe0";
@@ -19,11 +12,6 @@ class Login extends ServerMessage implements ServerMessageInterface
 
     protected $login = null;
     protected $crypt_password = null;
-
-    public function isValid()
-    {
-        return $this->getLogin() && $this->getPassword();
-    }
 
     /**
      * @return string
