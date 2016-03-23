@@ -55,7 +55,8 @@ class Cipher
         return $this;
     }
 
-    private function checkChecksum(Byte $message){
+    private function checkChecksum(Byte $message)
+    {
         $checksum = "\0";
         for ($i = 0; $i<$message->getLength(); $i++) {
             $checksum ^= $message->getOne($i)->get();
