@@ -104,7 +104,7 @@ class Key
 //        $spread[14] = (($this->byte->getOne(12)->ord() << 2) | ($this->byte->getOne(13)->ord() >> 6)) & 0xfe;
 //        $spread[15] = $this->byte->getOne(13)->ord() << 1;
 
-        $this->byte->setLength($spread->getLength())->set($spread);
+        $this->byte = $spread;
 
         return $this;
 
