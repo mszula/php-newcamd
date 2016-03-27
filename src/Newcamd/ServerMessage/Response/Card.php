@@ -7,7 +7,7 @@ use Newcamd\Card\Provider;
 use Newcamd\ServerMessageInterface;
 use Newcamd\ServerMessageResponse;
 
-class CardData extends ServerMessageResponse implements ServerMessageInterface
+class Card extends ServerMessageResponse implements ServerMessageInterface
 {
     const MESSAGE_ID = "\xe4";
 
