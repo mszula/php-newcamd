@@ -18,16 +18,19 @@ class Cipher
     protected $key;
     protected $cipher;
     protected $message;
-
-
-    public function __construct()
+    
+    public function __construct(CipherInterface $cipher = null)
     {
-        if (function_exists("openssl_encrypt")) {
-            $this->cipher = new OpenSSL();
-        } elseif (function_exists("mcrypt_encrypt")) {
-            $this->cipher = new Mcrypt();
+        if ($cipher) {
+            $this->cipher = $cipher;
         } else {
-            throw new CipherException('Can\'t find any cipher module (OpenSSL or Mcrypt)', 0);
+            if (function_exists("openssl_encrypt")) {
+                $this->cipher = new OpenSSL();
+            } elseif (function_exists("mcrypt_encrypt")) {
+                $this->cipher = new Mcrypt();
+            } else {
+                throw new CipherException('Can\'t find any cipher module (OpenSSL or Mcrypt)', 0);
+            }
         }
     }
 
