@@ -8,7 +8,10 @@ use Newcamd\Crypt\Key;
 use Newcamd\Exception\LoginException;
 use Newcamd\ServerMessage\Request\Card;
 use Newcamd\ServerMessage\Request\Login;
+use Newcamd\Socket\Exception\SocketException;
+use Newcamd\Socket\Fsock;
 use Newcamd\Socket\Socket;
+use Newcamd\Socket\SocketInterface;
 
 class Client
 {
@@ -17,7 +20,7 @@ class Client
      */
     protected $config;
     /**
-     * @var Socket
+     * @var SocketInterface
      */
     protected $socket;
     /**
@@ -34,12 +37,23 @@ class Client
      * Newcamd constructor.
      * @param $config
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config, SocketInterface $socket = null)
     {
         $this->config = $config;
 
         $this->cipher = new Cipher();
-        $this->socket = new Socket();
+
+        if ($socket) {
+            $this->socket = $socket;
+        } else {
+            if (function_exists("socket_connect")) {
+                $this->socket = new Socket();
+            } elseif (function_exists("fsockopen")) {
+                $this->socket = new Fsock();
+            } else {
+                throw new SocketException('Can\'t find any socket module', 0);
+            }
+        }
     }
 
     public function connect()
