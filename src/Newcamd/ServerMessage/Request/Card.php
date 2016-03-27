@@ -5,7 +5,7 @@ namespace Newcamd\ServerMessage\Request;
 use Newcamd\ServerMessage;
 use Newcamd\ServerMessageInterface;
 
-class CardData extends ServerMessage implements ServerMessageInterface
+class Card extends ServerMessage implements ServerMessageInterface
 {
     const MESSAGE_ID = "\xe3";
 
