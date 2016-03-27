@@ -25,13 +25,17 @@ class Key
         return $this->get();
     }
 
-
     /**
      * @return string
      */
     public function get()
     {
         return $this->byte->get();
+    }
+
+    public function getRange($start, $length)
+    {
+        return $this->byte->getRange($start, $length);
     }
 
     public function getLength()
