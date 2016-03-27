@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2016-03-16
- * Time: 14:11
- */
 
 namespace Newcamd\Crypt\Cipher;
-
 
 use Newcamd\Byte;
 use Newcamd\Crypt\Key;
@@ -37,7 +30,7 @@ abstract class Generic
     {
         if ($key->getLength() == 16) {
             $byte = new Byte(24);
-            $byte->set($key->get().substr($key->get(), 0, 8));
+            $byte->set($key->get().$key->getRange(0, 8));
             $key = new Key($byte);
         }
         $this->key = $key;
