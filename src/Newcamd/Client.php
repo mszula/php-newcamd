@@ -2,7 +2,6 @@
 
 namespace Newcamd;
 
-
 use Newcamd\Crypt\Cipher;
 use Newcamd\Crypt\Key;
 use Newcamd\Exception\LoginException;
@@ -32,11 +31,7 @@ class Client
      */
     protected $cardData = null;
     protected $login = null;
-
-    /**
-     * Newcamd constructor.
-     * @param $config
-     */
+    
     public function __construct(Config $config, SocketInterface $socket = null)
     {
         $this->config = $config;
@@ -159,5 +154,4 @@ class Client
     {
         return ($this->login instanceof ServerMessage\Response\LoginSuccess);
     }
-
 }

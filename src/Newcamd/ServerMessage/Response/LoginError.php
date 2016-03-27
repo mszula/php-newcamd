@@ -9,8 +9,8 @@ class LoginError extends ServerMessageResponse implements ServerMessageInterface
 {
     const MESSAGE_ID = "\xe2";
 
-    public function isLogin() {
+    public function isLogin()
+    {
         return false;
     }
-
 }

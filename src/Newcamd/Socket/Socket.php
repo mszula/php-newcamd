@@ -50,9 +50,9 @@ class Socket implements SocketInterface
 
     public function send(ServerMessage\Crypt $message)
     {
-        $message->prepend(ByteConverter::Int16Bit($message->getLength()));
+        $message->prepend(ByteConverter::IntSixteenBits($message->getLength()));
 
-        if (!@socket_send($this->socket, $message, strlen($message), 0)) {
+        if (!socket_send($this->socket, $message, strlen($message), 0)) {
             $this->error();
         }
 
@@ -74,5 +74,4 @@ class Socket implements SocketInterface
     {
         return (strlen($data) == $len);
     }
-
 }

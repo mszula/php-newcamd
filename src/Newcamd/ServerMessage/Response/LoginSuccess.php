@@ -9,7 +9,8 @@ class LoginSuccess extends ServerMessageResponse implements ServerMessageInterfa
 {
     const MESSAGE_ID = "\xe1";
     
-    public function isLogin() {
+    public function isLogin()
+    {
         return true;
     }
 

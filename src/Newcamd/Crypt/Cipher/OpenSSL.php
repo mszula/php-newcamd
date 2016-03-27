@@ -5,8 +5,6 @@ namespace Newcamd\Crypt\Cipher;
 use Newcamd\Byte;
 use Newcamd\ByteFactory;
 use Newcamd\Crypt\CipherInterface;
-use Newcamd\Crypt\Key;
-use Newcamd\ServerMessage;
 
 class OpenSSL extends Generic implements CipherInterface
 {
@@ -41,6 +39,4 @@ class OpenSSL extends Generic implements CipherInterface
         $secure = true;
         return openssl_random_pseudo_bytes($length, $secure);
     }
-
-
 }

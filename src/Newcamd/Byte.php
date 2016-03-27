@@ -39,7 +39,8 @@ class Byte
         return $self->set($this->bytes[$position]);
     }
 
-    public function getRange($start, $length=null) {
+    public function getRange($start, $length = null)
+    {
         $self = new self((int)$length);
         if ($length) {
             $substr = substr($this->bytes, $start, $length);

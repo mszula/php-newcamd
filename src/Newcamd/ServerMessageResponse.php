@@ -2,7 +2,6 @@
 
 namespace Newcamd;
 
-
 abstract class ServerMessageResponse
 {
     protected $message;
@@ -11,7 +10,7 @@ abstract class ServerMessageResponse
      * ServerMessageResponse constructor.
      * @param $message
      */
-    public function __construct($message=null)
+    public function __construct($message = null)
     {
         if ($message) {
             $this->setMessage($message);
@@ -36,6 +35,4 @@ abstract class ServerMessageResponse
         
         return $this;
     }
-    
-    
 }

@@ -61,7 +61,8 @@ class Cipher
     private function checkChecksum(Byte $message)
     {
         $checksum = "\0";
-        for ($i = 0; $i<$message->getLength(); $i++) {
+        $length = $message->getLength();
+        for ($i = 0; $i < $length; $i++) {
             $checksum ^= $message->getOne($i)->get();
         }
 
@@ -80,9 +81,7 @@ class Cipher
     private function prepare()
     {
         $len = $this->getMessage()->getLength();
-//        if ($len < 3 || $len + 12 > CWS_NETMSGSIZE) return -1;
 
-        //NetBuf Header
         $netbuf = new Byte(10);
 
         // Todo: Obsługa sid caid...
@@ -98,7 +97,7 @@ class Cipher
 //		netbuf[9] = (cd->provid >> 8) & 0xff;
 //		netbuf[10] = cd->provid & 0xff;
         }
-        //set up data buffer length unsigned chars
+
         $this->getMessage()->setOneAscii(($this->getMessage()->getOne(1)->ord() & 0xf0) | ((($len - 3) >> 8) & 0x0f), 1)
             ->setOneAscii(($len - 3) & 0xff, 2)
             ->prepend($netbuf);
@@ -115,9 +114,9 @@ class Cipher
             throw new CipherException('Lack of encrypt key. Use setKey() first.', 2);
         }
 
-        $this->prepare()
-            ->addPad()
-            ->addChecksum();
+        $this->prepare();
+        $this->addPad();
+        $this->addChecksum();
 
         $ivec = $this->getRandom(self::DES_BLOCK_SIZE);
         $this->cipher->setIv($ivec);
@@ -125,7 +124,8 @@ class Cipher
         $crypt = new ServerMessage\Crypt();
         $crypt->set('');
 
-        for ($i = 0; $i<$this->getMessage()->getLength(); $i += self::DES_BLOCK_SIZE) {
+        $length = $this->getMessage()->getLength();
+        for ($i = 0; $i < $length; $i += self::DES_BLOCK_SIZE) {
             $range = $this->getMessage()->getRange($i, self::DES_BLOCK_SIZE);
 
             $des = $this->cipher->encrypt($range);
@@ -151,7 +151,8 @@ class Cipher
         $decrypted = new Byte();
         $decrypted->set('');
 
-        for ($i = 0; $i<$this->getMessage()->getLength()-8; $i += self::DES_BLOCK_SIZE) {
+        $length = $this->getMessage()->getLength();
+        for ($i = 0; $i < $length-8; $i += self::DES_BLOCK_SIZE) {
             $range = $this->getMessage()->getRange($i, self::DES_BLOCK_SIZE);
 
             $decrypted->append($this->cipher->decrypt($range));

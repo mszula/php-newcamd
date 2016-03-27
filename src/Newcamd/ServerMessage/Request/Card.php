@@ -15,5 +15,4 @@ class Card extends ServerMessage implements ServerMessageInterface
 
         $this->set(self::MESSAGE_ID."\0\0");
     }
-
 }

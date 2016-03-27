@@ -5,7 +5,6 @@ namespace Newcamd\Crypt\Cipher;
 use Newcamd\Byte;
 use Newcamd\ByteFactory;
 use Newcamd\Crypt\CipherInterface;
-use Newcamd\ServerMessage;
 
 class Mcrypt extends Generic implements CipherInterface
 {

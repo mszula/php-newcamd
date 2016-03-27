@@ -23,6 +23,7 @@ class Login extends ServerMessage implements ServerMessageInterface
 
     /**
      * @param string $login
+     * @return $this
      */
     public function setLogin($login)
     {
@@ -39,10 +40,7 @@ class Login extends ServerMessage implements ServerMessageInterface
     {
         return $this->crypt_password;
     }
-
-    /**
-     * @param string $crypt_password
-     */
+    
     public function setPassword($password)
     {
         $this->crypt_password = crypt($password, self::PASSWORD_SALT);

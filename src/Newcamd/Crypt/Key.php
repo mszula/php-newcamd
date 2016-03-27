@@ -45,7 +45,8 @@ class Key
 
     public function xorKey(Byte $key2)
     {
-        for ($i = 0; $i < $key2->getLength(); $i++) {
+        $length = $key2->getLength();
+        for ($i = 0; $i < $length; $i++) {
             $this->byte->setOne($this->byte->getOne($i%14)->get() ^ $key2->getOne($i)->get(), $i%14);
         }
 

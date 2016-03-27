@@ -7,7 +7,7 @@ class ServerMessageFactory
 
     /**
      * @param string|Byte $message
-     * @return bool|ServerMessage\Response\CardData|ServerMessage\Response\DataLength|ServerMessage\Response\Initial|ServerMessage\Response\LoginSuccess
+     * @return bool|ServerMessage\Response\Card|ServerMessage\Response\DataLength|ServerMessage\Response\Initial|ServerMessage\Response\LoginSuccess
      */
     public static function create($message)
     {

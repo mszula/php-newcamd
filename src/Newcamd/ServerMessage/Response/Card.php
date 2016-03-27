@@ -53,7 +53,8 @@ class Card extends ServerMessageResponse implements ServerMessageInterface
 
     protected function prepareProviders()
     {
-        for ($i=0; $i<$this->getMessage()->getOne(14)->dec(); $i++) {
+        $length = $this->getMessage()->getOne(14)->dec();
+        for ($i = 0; $i < $length; $i++) {
             $provider = new Provider(3);
             $provider->set($this->getMessage()->getRange(15+11*$i, 3));
             $this->providers[] = $provider;
