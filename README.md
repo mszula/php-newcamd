@@ -45,3 +45,9 @@ $newcamd->connect()
 ## License
 
 PHP Newcamd is licensed under the MIT License - see the [License File](LICENSE.md) file for details.
+
+## Fresh implementation in TypeScript
+
+Hey! I haven't been here for a long time. In the meantime, I also created a TypeScript implementation of Newcamd. Feel free to use, clone, leave the star or whatever you want 😄
+
+[https://github.com/mszula/newcamd-client](https://github.com/mszula/newcamd-client)
