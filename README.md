@@ -7,7 +7,7 @@ Newcamd cardserver client implementation in PHP.
 Use [Composer](https://getcomposer.org/) to install Newcamd.
 
 ```bash
-$ composer require mszula/php-newcamd
+$ composer require mszula/php-newcamd:dev-master
 ```
 
 ## Requirements
